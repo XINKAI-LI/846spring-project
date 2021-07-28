@@ -1,0 +1,18 @@
+---
+title: "846model"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+
+library(lme4)
+
+```
+
+
