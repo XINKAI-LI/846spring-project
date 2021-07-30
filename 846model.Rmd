@@ -27,7 +27,7 @@ summary(dat)
 
 # user_followers + user_dev_time + user_experience + user_repo_experience
 # user_main_member + user_watched + user_succ_rate
-model <- lmer(pr_review_commits ~ pr_author_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_stars) + (1|repo_create_time) + (1|repo_external_contribution) + (1|repo_team_size) + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat)
+model <- lmer(pr_review_comments ~ pr_author_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_stars) + (1|repo_create_time) + (1|repo_external_contribution) + (1|repo_team_size) + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat)
 
 summary(model)
 ```
