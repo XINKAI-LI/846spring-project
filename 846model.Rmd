@@ -15,6 +15,10 @@ dat <- read.csv('./combine_data.csv', header = TRUE)
 summary(dat)
 #pr_data<-scale(pr_data[1:19])
 #summary(pr_data)
+
+#h5
+dat2 <- read.csv('./combine_data_h5.csv', header = TRUE)
+summary(dat2)
 ```
 
 ```{r}
@@ -30,6 +34,11 @@ summary(dat)
 model <- lmer(pr_review_comments ~ pr_author_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_stars) + (1|repo_create_time) + (1|repo_external_contribution) + (1|repo_team_size) + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat)
 
 summary(model)
+
+#h5
+model2 <- lmer(pr_review_comments ~ pr_author_reviewer_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_stars) + (1|repo_create_time) + (1|repo_external_contribution) + (1|repo_team_size) + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat2)
+
+summary(model2)
 ```
 
 
