@@ -9,12 +9,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Markdown
 ```{r}
-library(lme4)
+#library(lme4)
+library(lmerTest)
 dat <- read.csv('./combine_data.csv', header = TRUE)
-#head(pr_data)
 summary(dat)
-#pr_data<-scale(pr_data[1:19])
-#summary(pr_data)
 
 #h5
 dat2 <- read.csv('./combine_data_h5.csv', header = TRUE)
@@ -26,19 +24,61 @@ summary(dat2)
 # pr_notice_time  pr_review_time pr_review_commits pr_review_comments
 ############ independent variable ###########
 
+#random
+# (1|repo_id)
+
+# fixed
 # pr_author_race + pr_changed_files + pr_LOC + pr_commits 
-# (1|repo_stars) + (1|repo_create_time) + (1|repo_external_contribution) + (1|repo_team_size)
+# repo_stars + repo_create_time + repo_external_contribution + repo_team_size
+# user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate
 
-# user_followers + user_dev_time + user_experience + user_repo_experience
-# user_main_member + user_watched + user_succ_rate
-model <- lmer(pr_review_comments ~ pr_author_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_stars) + (1|repo_create_time) + (1|repo_external_contribution) + (1|repo_team_size) + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat)
+# h1: pr_review_comments
+#model <- lmer(pr_review_comments ~ pr_author_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_id) + repo_stars + repo_create_time + repo_external_contribution + repo_team_size + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat)
 
-summary(model)
+# h2: pr_review_commits - (optional: add pr_review_comments as additional independent variable)
+#model <- lmer(pr_review_commits ~ pr_author_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_id) + repo_stars + repo_create_time + repo_external_contribution + repo_team_size + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat)
 
-#h5
-model2 <- lmer(pr_review_comments ~ pr_author_reviewer_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_stars) + (1|repo_create_time) + (1|repo_external_contribution) + (1|repo_team_size) + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat2)
+# h3: pr_notice_time
+#model <- lmer(pr_notice_time ~ pr_author_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_id) + repo_stars + repo_create_time + repo_external_contribution + repo_team_size + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat)
 
-summary(model2)
+# h4: pr_review_time - (optional: add pr_review_commits + pr_review_comments as independent variables)
+model <- lmer(pr_review_time ~ pr_author_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_id) + repo_stars + repo_create_time + repo_external_contribution + repo_team_size + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat)
+
+# original one, ignore this
+#model <- lmer(pr_review_comments ~ pr_author_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_stars) + (1|repo_create_time) + (1|repo_external_contribution) + (1|repo_team_size) + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat)
+
+anova(model)
+print(summary(model), correlation=TRUE)
 ```
 
 
+```{r}
+#h5
+
+########### dependent variable: ############
+# pr_notice_time  pr_review_time pr_review_commits pr_review_comments
+############ independent variable ###########
+
+#random
+# (1|repo_id)
+
+# fixed
+# pr_author_reviewer_race + pr_changed_files + pr_LOC + pr_commits
+# repo_stars + repo_create_time + repo_external_contribution + repo_team_size
+# user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate
+
+# pr_review_comments
+#model2 <- lmer(pr_review_comments ~ pr_author_reviewer_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_id) + repo_stars + repo_create_time + repo_external_contribution + repo_team_size + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat2)
+
+# pr_review_commits 
+#model2 <- lmer(pr_review_commits ~ pr_author_reviewer_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_id) + repo_stars + repo_create_time + repo_external_contribution + repo_team_size + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat2)
+
+# pr_notice_time
+model2 <- lmer(pr_notice_time ~ pr_author_reviewer_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_id) + repo_stars + repo_create_time + repo_external_contribution + repo_team_size + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat2)
+
+# pr_review_time 
+#model2 <- lmer(pr_review_time ~ pr_author_reviewer_race + pr_changed_files + pr_LOC + pr_commits + (1|repo_id) + repo_stars + repo_create_time + repo_external_contribution + repo_team_size + user_followers + user_dev_time + user_experience + user_repo_experience + user_main_member + user_watched + user_succ_rate, data = dat2)
+
+anova(model2)
+print(summary(model2), correlation=TRUE)
+```
